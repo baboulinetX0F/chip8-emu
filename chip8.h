@@ -11,7 +11,8 @@ private:
     // 0x200-0xFFF - Program ROM and work RAM
     unsigned char memory[4096];
 
-      
+    // CHIP-8 has 16 8-bit data registers named from V0 to VF
+    unsigned char V[16];
 
     // The address register, which is named I, is 16 bits wide
     // and is used with several opcodes that involve memory operations.
@@ -36,18 +37,39 @@ private:
     // program counter
     unsigned short pc;
 
+    // draw flag : if true, update screen with Draw()
+    bool _drawFlag = false; 
+
+    unsigned char chip8_fontset[80] =
+    { 
+        0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
+        0x20, 0x60, 0x20, 0x20, 0x70, // 1
+        0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
+        0xF0, 0x10, 0xF0, 0x10, 0xF0, // 3
+        0x90, 0x90, 0xF0, 0x10, 0x10, // 4
+        0xF0, 0x80, 0xF0, 0x10, 0xF0, // 5
+        0xF0, 0x80, 0xF0, 0x90, 0xF0, // 6
+        0xF0, 0x10, 0x20, 0x40, 0x40, // 7
+        0xF0, 0x90, 0xF0, 0x90, 0xF0, // 8
+        0xF0, 0x90, 0xF0, 0x10, 0xF0, // 9
+        0xF0, 0x90, 0xF0, 0x90, 0x90, // A
+        0xE0, 0x90, 0xE0, 0x90, 0xE0, // B
+        0xF0, 0x80, 0x80, 0x80, 0xF0, // C
+        0xE0, 0x90, 0x90, 0x90, 0xE0, // D
+        0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
+        0xF0, 0x80, 0xF0, 0x80, 0x80  // F
+    };
+
 public:
     chip8();
-    ~chip8();
-
-    bool _drawFlag = false;
-
-    // CHIP-8 has 16 8-bit data registers named from V0 to VF
-    unsigned char V[16];
+    ~chip8();       
     
+    const unsigned char* getDataRegister();
+
      // Initialize memory, register etc...    
     void Initialize();
 
+    // Load Program into memory
     void LoadProgram(const char* filePath);
 
     // Emulate a chip8 cpu cycle
