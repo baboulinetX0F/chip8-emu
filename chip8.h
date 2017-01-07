@@ -1,3 +1,4 @@
+#include "Renderer.h"
 
 class chip8 {
 
@@ -59,6 +60,8 @@ private:
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // E
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
     };
+
+    Renderer* _renderer;
 
 public:
     chip8();

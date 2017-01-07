@@ -6,7 +6,8 @@
 
 chip8::chip8()
 {
-     Initialize(); 
+     Initialize();
+     _renderer = new Renderer();
 }
 
 chip8::~chip8() { }
@@ -14,11 +15,6 @@ chip8::~chip8() { }
 const unsigned char* chip8::getDataRegister()
 {
     return V;
-}
-
-const unsigned char chip8::getDelay()
-{
-    return delay_timer;
 }
 
 void chip8::Initialize()
@@ -150,42 +146,49 @@ void chip8::Cycle()
                     pc+=2;
                     break;
                 }
+
                 case 0x0002:
                 {
                     V[x] = V[x]&V[y];
                     pc+=2;
                     break;
                 }
+
                 case 0x0003:
                 {
                     V[x] = V[x]^V[y];
                     pc+=2;
                     break;
                 }
+
                 case 0x0004:
                 {
                     V[x] += V[y];
                     pc+=2;
                     break;
                 }
+
                 case 0x0005:
                 {
                     V[x] -= V[y];
                     pc+=2;
                     break;
                 }
+
                 case 0x0006:
                 {
                     V[x] = V[x] >> 1;
                     pc+=2;
                     break;
                 }
+
                 case 0x0007:
                 {
                     V[x] = V[y] - V[x];
                     pc+=2;
                     break;
                 }
+
                 case 0x000E:
                 {
                     V[x] = V[x] << 1;
@@ -254,7 +257,17 @@ void chip8::Cycle()
 
         default:
             pc += 2;
-    }          
+    } 
+
+    if (delay_timer > 0)
+        delay_timer--;
+
+    if (sound_timer > 0)
+    {
+        if (sound_timer == 1)
+            printf("BEEP !\n");
+        sound_timer--;
+    }
 }
 
 void chip8::LoadProgram(const char* filePath)
