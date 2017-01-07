@@ -11,8 +11,7 @@ private:
     // 0x200-0xFFF - Program ROM and work RAM
     unsigned char memory[4096];
 
-    // CHIP-8 has 16 8-bit data registers named from V0 to VF
-    unsigned char V[16];    
+      
 
     // The address register, which is named I, is 16 bits wide
     // and is used with several opcodes that involve memory operations.
@@ -42,6 +41,9 @@ public:
     ~chip8();
 
     bool _drawFlag = false;
+
+    // CHIP-8 has 16 8-bit data registers named from V0 to VF
+    unsigned char V[16];
     
      // Initialize memory, register etc...    
     void Initialize();

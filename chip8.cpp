@@ -19,7 +19,65 @@ void chip8::Initialize()
 
 void chip8::Cycle()
 {
-    // Emulate CPU cycle
+    // Fetch opcode
+    opcode = memory[pc] << 8 | memory[pc+1];
+
+    // Debug display
+    printf("Current pc : %#06x\n", pc);
+    printf("Current opcode : %#06x\n",opcode);
+
+    switch(opcode & 0xF000)
+    {
+        // 1NNN : Jump to adress NNN
+        case 0x1000:
+        {
+            pc = opcode & 0x0FFF;
+            break;
+        }
+
+        // 3XNN : Skips the next instruction if VX equals NN.
+        case 0x3000:
+        {
+            int x = (opcode & 0x0F00) >> 8; 
+            if (V[x] == (opcode & 0x00FF))
+                pc += 4;
+            else
+                pc += 2;
+            break;
+        } 
+
+        // 4XNN : Skips the next instruction if VX not equal to NN.
+        case 0x4000:
+        {
+            int x = (opcode & 0x0F00) >> 8; 
+            if (V[x] != (opcode & 0x00FF))
+                pc += 4;
+            else
+                pc += 2;
+            break;
+        }         
+        
+        // 6XNN : Set V[X] to NN
+        case 0x6000:
+        {
+            int x = (opcode & 0x0F00) >> 8;
+            V[x] = (opcode & 0x00FF);
+            pc += 2;
+            break;
+        }
+
+         // 7XNN : Add to V[X] the content of NN
+        case 0x7000:
+        {
+            int x = (opcode & 0x0F00) >> 8;
+            V[x] += (opcode & 0x00FF);
+            pc += 2;
+            break;
+        }
+
+        default:
+            pc += 2;
+    }          
 }
 
 void chip8::LoadProgram(const char* filePath)
