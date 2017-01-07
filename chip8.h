@@ -40,11 +40,17 @@ private:
 public:
     chip8();
     ~chip8();
+
+    bool _drawFlag = false;
     
      // Initialize memory, register etc...    
     void Initialize();
 
+    void LoadProgram(const char* filePath);
+
     // Emulate a chip8 cpu cycle
     void Cycle();
+
+    void Draw();
 
 };
