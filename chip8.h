@@ -38,8 +38,7 @@ private:
     // program counter
     unsigned short pc;
 
-    // draw flag : if true, update screen with Draw()
-    bool _drawFlag = false; 
+    unsigned char gfx[64*32];    
 
     unsigned char chip8_fontset[80] =
     { 
@@ -65,7 +64,10 @@ private:
 
 public:
     chip8();
-    ~chip8();       
+    ~chip8();
+
+    // draw flag : if true, update screen with Draw()
+    bool _drawFlag = false;     
     
     const unsigned char* getDataRegister();
 

@@ -14,8 +14,11 @@ int main(int argc, char** argv)
         chip.Cycle();
     
     // Debug display    
-    for (unsigned int i = 0; i < 16; i++)
+    for (unsigned int i = 0; i < 16; i++) {
         printf("V[%d] : %#06x\n", i, chip.getDataRegister()[i]);
+        if (chip._drawFlag)
+            chip.Draw();
+    }
 
     SDL_Delay( 2000 );   
     return 0;

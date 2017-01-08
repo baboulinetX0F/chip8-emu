@@ -126,6 +126,33 @@ void chip8::Cycle()
             break;
         }
 
+        case 0xD000:
+        {
+            unsigned short x = V[(opcode & 0x0F00) >> 8];
+            unsigned short y = V[(opcode & 0x00F0) >> 4];
+            unsigned short height = (opcode & 0x000F);
+            unsigned short pixel;
+
+            for (int yline = 0; yline < height; yline++)
+            {
+                pixel = memory[I + yline];
+                for (int xline = 0; xline < 8; xline++)
+                {
+                    if ((pixel & (0x80 >> xline)) != 0)
+                    {
+                         if(gfx[(x + xline + ((y + yline) * 64))] == 1)
+                            V[0xF] = 1;
+
+                        gfx[x + xline + ((y + yline) * 64)] ^= 1;
+                    }
+                }
+            }
+            
+            _drawFlag = true;
+            pc+=2;
+            break;
+        }
+
         // 0x8FFF
         case 0x8000:
         {
@@ -288,4 +315,5 @@ void chip8::LoadProgram(const char* filePath)
 void chip8::Draw()
 {
     // Draw graphics into screen
+    _drawFlag = false;
 }

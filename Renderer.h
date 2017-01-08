@@ -7,7 +7,7 @@ class Renderer
 {
     private:
         SDL_Window* _window;
-        SDL_Surface* _screenSurface;
+        SDL_Renderer* _renderer;
 
         void Initialize();
         
@@ -16,4 +16,6 @@ class Renderer
         ~Renderer();
 
         const SDL_Window* GetWindow();
+
+        void Render(unsigned char* gfx);
 };
