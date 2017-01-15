@@ -17,7 +17,6 @@ int main(int argc, char** argv)
             chip.Draw();
         chip.PollKeys();
     }
-
-    SDL_Delay( 2000 );   
+     
     return 0;
 }

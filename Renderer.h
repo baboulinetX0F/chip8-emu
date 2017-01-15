@@ -2,6 +2,7 @@
 
 const static int SCREEN_WIDTH = 640;
 const static int SCREEN_HEIGHT = 320;
+const static int RENDER_SCALE = SCREEN_WIDTH / 64;
 
 class Renderer
 {

@@ -32,6 +32,7 @@ void chip8::Initialize()
     for (int i = 0; i<64*32;i++)
         gfx[i] = 0;
 
+    // initialize input
     for (int i = 0; i<16; i++)
         input[i] = 0;
     
@@ -65,20 +66,26 @@ void chip8::Cycle()
     {
         case 0x0000:
         {
-            // 0x00E0 : clear screen
-            if (opcode == 0x00E0)
+            switch (opcode & 0x00FF)
             {
-                disp_clear();
-                pc+=2;
-                break;
+                case 0x00E0:
+                {
+                    disp_clear();
+                    pc+=2;
+                    break;
+                }
+                case 0x00EE:
+                {
+                     --sp;
+                    pc = stack[sp];
+                    pc+=2;
+                    break;
+                }
+                default:
+                    printf("ERROR : Unknown opcode : %#06x", opcode);
+                    break;
             }
-            else if (opcode == 0x00EE) // 0x00EE : Return from subroutine
-            {
-                --sp;
-                pc = stack[sp];
-                pc+=2;
-                break;
-            }
+            break;           
         }
         
         // 1NNN : Jump to adress NNN
@@ -233,6 +240,9 @@ void chip8::Cycle()
                     pc+=2;
                     break;
                 }
+                default:
+                    printf("ERROR : Unknown opcode : %#06x", opcode);
+                    break;
             }
             break;
         }    
@@ -305,22 +315,29 @@ void chip8::Cycle()
         case 0xE000:
         {
             int x = (opcode & 0x0F00) >> 8;
-            if (opcode & 0xF0FF == 0xE0A1)
+            switch (opcode & 0xF0FF)
             {
-                 if (input[V[x]] == 0)
-                    pc+=4;
-                else
-                    pc+=2;
-                break;
+                case 0xE0A1:
+                {
+                    if (input[V[x]] == 0)
+                        pc+=4;
+                    else
+                        pc+=2;
+                    break;
+                }
+                case 0xE09E:
+                {
+                    if (input[V[x]] != 0)
+                        pc+=4;
+                    else
+                        pc+=2;
+                    break;
+                }
+                default:
+                    printf("ERROR : Unknown opcode : %#06x\n", opcode);
+                    break;
             }
-            else if (opcode & 0xF0FF == 0xE09E)
-            {
-                if (input[V[x]] != 0)
-                    pc+=4;
-                else
-                    pc+=2;
-                break;
-            }
+            break;         
         }
 
         case 0xF000:
@@ -409,16 +426,16 @@ void chip8::Cycle()
                     I += ((opcode & 0x0F00) >> 8) + 1;
                     pc+=2;
                     break;
-                }                
+                }
+                default:
+                    printf("ERROR : Unknown opcode : %#06x\n", opcode);
+                    break;             
             }
             break;
         }
-
-        //default:
-        //    pc += 2;
-
         default:
-            printf ("Unknown opcode: 0x%X\n", opcode);
+             printf("ERROR : Unknown opcode : %#06x\n", opcode);
+             break;
     } 
 
     if (delay_timer > 0)

@@ -33,8 +33,7 @@ void Renderer::SetWindowTitle(const char* newTitle)
 }
 
 void Renderer::Render(unsigned char* gfx)
-{
-    int RENDER_SCALE = 10;
+{    
     SDL_RenderClear(_renderer);
     for (unsigned int y = 0; y < 32; y++)
     {
@@ -42,6 +41,7 @@ void Renderer::Render(unsigned char* gfx)
         {
             if (gfx[x + (y*64)] != 0)
             {
+               // Scale original 64x32 display to a correct resolution
                for (int yi = 0; yi < RENDER_SCALE; yi++)
                {
                     for (int xi = 0; xi < RENDER_SCALE; xi++)
@@ -49,7 +49,6 @@ void Renderer::Render(unsigned char* gfx)
                         SDL_RenderDrawPoint(_renderer,x*RENDER_SCALE + xi, y*RENDER_SCALE + yi);
                     } 
                }
-               //SDL_RenderDrawPoint(_renderer, x, y);
             }
         }
     }    
@@ -61,22 +60,22 @@ void Renderer::PollKeys(unsigned char* keys)
     SDL_Event event;    
     SDL_PollEvent( &event );
     switch( event.type ){
-      case SDL_KEYDOWN:
+        case SDL_KEYDOWN:
             switch( event.key.keysym.sym ){
                     case SDLK_LEFT:
-                        keys[0xF] = 1;
-                        break;
-                    
+                        keys[0x5] = 1;
+                        printf("Key Pressed : %d\n", event.key.keysym.sym);
+                        break;                    
                     default:
                         break;
-            }
-            //printf("Key Pressed : %d\n", event.key.keysym.sym);
-        break;
+            }            
+        break;                    
         case SDL_KEYUP:
             switch( event.key.keysym.sym ){
                     case SDLK_LEFT:
-                        keys[0xF] = 0;
+                        keys[0x5] = 0;
                         break;                    
             }
+        break;
     }
 }
