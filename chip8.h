@@ -62,6 +62,8 @@ private:
 
     Renderer* _renderer;
 
+    void disp_clear();
+
 public:
     chip8();
     ~chip8();
@@ -82,4 +84,7 @@ public:
 
     void Draw();
 
+    void PollKeys();
+
+    void DebugRender();
 };

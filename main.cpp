@@ -10,14 +10,12 @@ int main(int argc, char** argv)
     chip.Initialize();
     chip.LoadProgram("roms/INVADERS");
 
-    for (int i = 0; i < 10; i++)
+    while (true)
+    {
         chip.Cycle();
-    
-    // Debug display    
-    for (unsigned int i = 0; i < 16; i++) {
-        printf("V[%d] : %#06x\n", i, chip.getDataRegister()[i]);
-        if (chip._drawFlag)
+        if(chip._drawFlag)
             chip.Draw();
+        chip.PollKeys();
     }
 
     SDL_Delay( 2000 );   
