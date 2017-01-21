@@ -10,13 +10,13 @@ class Renderer
         SDL_Window *_window;
         SDL_Renderer *_renderer;
 
-        void Initialize();
+        void Initialize();      
         
     public:
         Renderer();
         ~Renderer();
 
-        const SDL_Window* GetWindow();
+        const SDL_Window* GetWindow();        
         void SetWindowTitle(const char* newTitle);
 
         void Render(unsigned char* gfx);

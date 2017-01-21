@@ -23,7 +23,7 @@ private:
     unsigned short sp;          // stack pointer
 
     // Original CHIP-8 Display resolution is 64×32 pixels
-    unsigned char display[64*32];
+    unsigned char gfx[64*32];
 
     // Delay timer is intended to be used for timing the events of games. 
     // Its value can be set and read.
@@ -37,8 +37,6 @@ private:
 
     // program counter
     unsigned short pc;
-
-    unsigned char gfx[64*32];    
 
     unsigned char chip8_fontset[80] =
     { 
@@ -61,7 +59,7 @@ private:
     };
 
     Renderer* _renderer;
-
+   
     void disp_clear();
 
 public:

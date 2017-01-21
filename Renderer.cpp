@@ -62,18 +62,36 @@ void Renderer::PollKeys(unsigned char* keys)
     switch( event.type ){
         case SDL_KEYDOWN:
             switch( event.key.keysym.sym ){
+                    case SDLK_UP:
+                        keys[0x2] = 1;                       
+                        break;
                     case SDLK_LEFT:
-                        keys[0x5] = 1;
-                        printf("Key Pressed : %d\n", event.key.keysym.sym);
-                        break;                    
+                        keys[0x4] = 1;                       
+                        break;
+                    case SDLK_RIGHT:
+                        keys[0x6] = 1;                       
+                        break;
+                    case SDLK_DOWN:
+                        keys[0x5] = 1;                       
+                        break;                   
                     default:
+                        printf("Key Pressed : %d\n", event.key.keysym.sym);
                         break;
             }            
         break;                    
         case SDL_KEYUP:
             switch( event.key.keysym.sym ){
+                    case SDLK_UP:
+                        keys[0x2] = 0;                       
+                        break;
                     case SDLK_LEFT:
-                        keys[0x5] = 0;
+                        keys[0x4] = 0;
+                        break;
+                    case SDLK_RIGHT:
+                        keys[0x6] = 0;                       
+                        break;
+                    case SDLK_DOWN:
+                        keys[0x5] = 0;                       
                         break;                    
             }
         break;

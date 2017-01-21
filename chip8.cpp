@@ -24,21 +24,35 @@ void chip8::Initialize()
     I = 0;
     sp = 0;
 
-    // initialize memory
+    // reset memory
     for (int i = 0; i<4096;i++)
         memory[i] = 0;
 
-    // initialize gfx
+     // reset data registers
+    for (int i = 0; i<16;i++)
+        V[i] = 0;
+
+    // reset gfx
     for (int i = 0; i<64*32;i++)
         gfx[i] = 0;
 
-    // initialize input
+    // reset stack
+    for (int i = 0; i<16;i++)
+        stack[i] = 0;  
+
+    // reset input
     for (int i = 0; i<16; i++)
         input[i] = 0;
     
     // load fontset into memory
     for (int i = 0; i < 80; i++)
         memory[i] = chip8_fontset[i];
+
+	// Reset timers
+	delay_timer = 0;
+	sound_timer = 0;
+
+    _drawFlag = true;
 
     // Init RNG
     srand(time(NULL));
@@ -58,23 +72,19 @@ void chip8::Cycle()
     // Fetch opcode
     opcode = memory[pc] << 8 | memory[pc+1];
 
-    // Debug display
-    //printf("Current pc : %#06x\n", pc);
-    //printf("Current opcode : %#06x\n",opcode);
-
     switch(opcode & 0xF000)
     {
         case 0x0000:
         {
-            switch (opcode & 0x00FF)
+            switch (opcode & 0x000F)
             {
-                case 0x00E0:
+                case 0x0000:
                 {
                     disp_clear();
                     pc+=2;
                     break;
                 }
-                case 0x00EE:
+                case 0x000E:
                 {
                      --sp;
                     pc = stack[sp];
@@ -160,7 +170,7 @@ void chip8::Cycle()
         case 0x8000:
         {
             int x = (opcode & 0x0F00) >> 8;
-            int y = (opcode & 0x0F00) >> 4;
+            int y = (opcode & 0x00F0) >> 4;
             switch (opcode & 0x000F)
             {               
                 case 0x0000:
@@ -172,21 +182,21 @@ void chip8::Cycle()
 
                 case 0x0001:
                 {
-                    V[x] = V[x]|V[y];
+                    V[x] |= V[y];
                     pc+=2;
                     break;
                 }
 
                 case 0x0002:
                 {
-                    V[x] = V[x]&V[y];
+                    V[x] &= V[y];
                     pc+=2;
                     break;
                 }
 
                 case 0x0003:
                 {
-                    V[x] = V[x]^V[y];
+                    V[x] ^= V[y];
                     pc+=2;
                     break;
                 }
@@ -206,9 +216,9 @@ void chip8::Cycle()
                 case 0x0005:
                 {
                     if (V[y] > V[x])
-                         V[0xF] = 1;
+                         V[0xF] = 0;
                     else
-                        V[0xF] = 0;
+                        V[0xF] = 1;
                     V[x] -= V[y];
                     pc+=2;
                     break;
@@ -217,7 +227,7 @@ void chip8::Cycle()
                 case 0x0006:
                 {
                     V[0xF] = V[x] & 0x1;
-                    V[x] = V[x] >> 1;
+                    V[x] >>= 1;
                     pc+=2;
                     break;
                 }
@@ -236,29 +246,25 @@ void chip8::Cycle()
                 case 0x000E:
                 {
                     V[0xF] = V[x] >> 7;
-                    V[x] = V[x] << 1;
+                    V[x] <<= 1;
                     pc+=2;
                     break;
                 }
                 default:
                     printf("ERROR : Unknown opcode : %#06x", opcode);
-                    break;
             }
             break;
         }    
 
         case 0x9000:
-        {
-            if (opcode & 0xF00F == 0x9000)
-            {
-                int x = (opcode & 0x0F00) >> 8;
-                int y = (opcode & 0x0F00) >> 4;
-                if (V[x] != V[y])
-                    pc+=4;
-                else
-                    pc+=2;
-                break;
-            }
+        {           
+             int x = (opcode & 0x0F00) >> 8;
+             int y = (opcode & 0x0F00) >> 4;
+             if (V[x] != V[y])
+                pc+=4;
+             else
+                pc+=2;
+             break;            
         }
 
         // ANNN : Sets I to the address NNN.
@@ -292,17 +298,19 @@ void chip8::Cycle()
             unsigned short height = (opcode & 0x000F);
             unsigned short pixel;
 
+            V[0xF] = 0;    
             for (int yline = 0; yline < height; yline++)
             {
                 pixel = memory[I + yline];
                 for (int xline = 0; xline < 8; xline++)
                 {
-                    if ((pixel & (0x80 >> xline)) != 0)
-                    {
-                         if(gfx[(x + xline + ((y + yline) * 64))] == 1)
-                            V[0xF] = 1;
+                    if ((pixel & (0x80 >> xline)) != 0) {
 
-                        gfx[x + xline + ((y + yline) * 64)] ^= 1;
+                        if(gfx[(x + xline + ((y + yline) * 64))] == 1) {
+                            V[0xF] = 1;
+                        }
+
+                        gfx[(x + xline) + ((y + yline) * 64)] ^= 1;
                     }
                 }
             }
@@ -315,9 +323,9 @@ void chip8::Cycle()
         case 0xE000:
         {
             int x = (opcode & 0x0F00) >> 8;
-            switch (opcode & 0xF0FF)
+            switch (opcode & 0x00FF)
             {
-                case 0xE0A1:
+                case 0x00A1:
                 {
                     if (input[V[x]] == 0)
                         pc+=4;
@@ -325,7 +333,7 @@ void chip8::Cycle()
                         pc+=2;
                     break;
                 }
-                case 0xE09E:
+                case 0x009E:
                 {
                     if (input[V[x]] != 0)
                         pc+=4;

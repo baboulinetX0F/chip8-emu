@@ -8,7 +8,7 @@ int main(int argc, char** argv)
     chip8 chip;
 
     chip.Initialize();
-    chip.LoadProgram("roms/INVADERS");
+    chip.LoadProgram("roms/PONG");
 
     while (true)
     {
