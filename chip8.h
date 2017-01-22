@@ -75,7 +75,7 @@ public:
     void Initialize();
 
     // Load Program into memory
-    void LoadProgram(const char* filePath);
+    int LoadProgram(const char* filePath);
 
     // Emulate a chip8 cpu cycle
     void Cycle();

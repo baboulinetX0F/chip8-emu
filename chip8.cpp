@@ -457,11 +457,16 @@ void chip8::Cycle()
     }
 }
 
-void chip8::LoadProgram(const char* filePath)
+int chip8::LoadProgram(const char* filePath)
 {
     // Load program into memory
     unsigned char buffer[1];
     FILE* programFile = fopen(filePath, "rb");
+    if (programFile == NULL)
+    {
+       printf("Cannot read %s\n", filePath);
+        return -1; 
+    }
     int i = 0;
     while(!feof(programFile))
     {
@@ -471,6 +476,7 @@ void chip8::LoadProgram(const char* filePath)
     }
     fclose(programFile);
     _renderer->SetWindowTitle(filePath);
+    return 0;
 }
 
 void chip8::DebugRender()

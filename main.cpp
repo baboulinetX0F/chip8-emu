@@ -5,10 +5,16 @@
 
 int main(int argc, char** argv)
 {
+    if (argc < 2) {
+        std::cout << "Error : No filepath argument passed\nChip8 Emulator Usage : chip8bin <file>\n";
+        return -1;
+    }
+    
     chip8 chip;
 
     chip.Initialize();
-    chip.LoadProgram("roms/PONG");
+    if (chip.LoadProgram(argv[1]) == -1)
+        return -1;    
 
     while (true)
     {
