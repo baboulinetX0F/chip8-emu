@@ -61,6 +61,7 @@ private:
     Renderer* _renderer;
    
     void disp_clear();
+    void beep();
 
 public:
     chip8();

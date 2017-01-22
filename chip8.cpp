@@ -453,6 +453,7 @@ void chip8::Cycle()
     {
         if (sound_timer == 1)
             printf("BEEP !\n");
+            
         sound_timer--;
     }
 }
