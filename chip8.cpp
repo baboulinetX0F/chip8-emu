@@ -515,6 +515,10 @@ void chip8::PollKeys()
              _paused = false;
         else
              _paused = true;
+    }
+    else if (result == SDLK_o)
+    {
+        reset();
     }       
 }
 
@@ -542,4 +546,33 @@ void chip8::mainLoop()
         PollKeys();
         SDL_Delay(1);    
     }
+}
+
+void chip8::reset()
+{
+    pc = 0x200; // Start of most CHIP8 program
+    opcode = 0;
+    I = 0;
+    sp = 0;
+
+     // reset data registers
+    for (int i = 0; i<16;i++)
+        V[i] = 0;
+
+    // reset gfx
+    for (int i = 0; i<64*32;i++)
+        gfx[i] = 0;
+
+    // reset stack
+    for (int i = 0; i<16;i++)
+        stack[i] = 0;  
+   
+	// Reset timers
+	delay_timer = 0;
+	sound_timer = 0;
+
+    _drawFlag = true;
+
+    // Init RNG
+    srand(time(NULL));
 }

@@ -65,6 +65,7 @@ private:
    
     void disp_clear();
     void beep();
+    void reset();
 
 public:
     chip8();
