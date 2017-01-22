@@ -506,14 +506,16 @@ void chip8::Draw()
 
 void chip8::PollKeys()
 {    
-    _renderer->PollKeys(input);
+    if (_renderer->PollKeys(input) == SDL_QUIT)
+        _quit = true;
+    
 }
 
 void chip8::mainLoop()
 {
     int last_ticks = SDL_GetTicks();
     int last_delta = 0, step_delta = 0, render_delta = 0;
-    while (true)
+    while (!_quit)
     {
         last_delta = SDL_GetTicks() - last_ticks;
         last_ticks = SDL_GetTicks();

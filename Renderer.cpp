@@ -55,7 +55,7 @@ void Renderer::Render(unsigned char* gfx)
     SDL_RenderPresent(_renderer);
 }
 
-void Renderer::PollKeys(unsigned char* keys)
+int Renderer::PollKeys(unsigned char* keys)
 {
     SDL_Event event;    
     SDL_PollEvent( &event );
@@ -164,5 +164,7 @@ void Renderer::PollKeys(unsigned char* keys)
                         break;       
             }
         break;
+        case SDL_QUIT:
+            return SDL_QUIT;
     }
 }

@@ -38,6 +38,8 @@ private:
     // program counter
     unsigned short pc;
 
+    bool _quit = false;
+
     unsigned char chip8_fontset[80] =
     { 
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

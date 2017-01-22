@@ -20,5 +20,5 @@ class Renderer
         void SetWindowTitle(const char* newTitle);
 
         void Render(unsigned char* gfx);
-        void PollKeys(unsigned char* input);
+        int PollKeys(unsigned char* input);
 };
