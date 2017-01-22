@@ -85,5 +85,7 @@ public:
 
     void PollKeys();
 
+    void mainLoop();
+
     void DebugRender();
 };
