@@ -506,9 +506,16 @@ void chip8::Draw()
 
 void chip8::PollKeys()
 {    
-    if (_renderer->PollKeys(input) == SDL_QUIT)
+    int result = _renderer->PollKeys(input);
+    if (result == SDL_QUIT)
         _quit = true;
-    
+    else if (result == SDLK_p)
+    {        
+        if (_paused)
+             _paused = false;
+        else
+             _paused = true;
+    }       
 }
 
 void chip8::mainLoop()
@@ -522,12 +529,12 @@ void chip8::mainLoop()
         step_delta += last_delta;
         render_delta += last_delta;
 
-        if (step_delta >= 1){
+        if (step_delta >= 1 && !_paused){
             Cycle();
             step_delta--;
         }
 
-        if (render_delta >= (1000/60)) {
+        if (render_delta >= (1000/60) &&  !_paused) {
             if(_drawFlag)
                 Draw();
             render_delta -= (1000 / 60);     

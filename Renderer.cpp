@@ -109,7 +109,11 @@ int Renderer::PollKeys(unsigned char* keys)
                         break;
                     case SDLK_v:
                         keys[0xC] = 1;                       
-                        break;       
+                        break;
+                    case SDLK_p:
+                        return SDLK_p;
+                    case SDLK_o:
+                        return SDLK_o;       
             }            
         break;                    
         case SDL_KEYUP:
@@ -166,5 +170,7 @@ int Renderer::PollKeys(unsigned char* keys)
         break;
         case SDL_QUIT:
             return SDL_QUIT;
+        
     }
+    return 0;
 }

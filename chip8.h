@@ -39,6 +39,7 @@ private:
     unsigned short pc;
 
     bool _quit = false;
+    bool _paused = false;
 
     unsigned char chip8_fontset[80] =
     { 
